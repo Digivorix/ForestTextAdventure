@@ -6,11 +6,11 @@
 	<meta title="ForestTextAdventure" package="com.digivorix.forestadventure.ForestTextAdventure" version="1.0.0" company="Toby Davis" />
 	
 	<!-- output -->
-	<app main="com.digivorix.forestadventure.Main" file="ForestTextAdventure" path="bin" />
+	<app main="com.digivorix.forestadventure.Main" file="ForestTxtAdv" path="bin" />
 	
 	<window background="#000000" fps="60" />
 	<window width="800" height="480" unless="mobile" />
-	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
+	<window orientation="landscape" vsync="true" antialiasing="0" if="cpp" />
 	
 	<!-- classpath, haxe libs -->
 	<source path="src" />
@@ -18,7 +18,8 @@
 	
 	<!-- assets -->
 	<icon path="assets/openfl.svg" />
-	<assets path="assets/img" rename="img" />
+	<assets path="assets/images" rename="images" include="*.png|*.jpg|*.gif" />
+	<assets path="assets/fonts" rename="fonts" include="*.png|*.fnt|*.ttf" />
 	
 	<!-- optimize output
 	<haxeflag name="-dce full" /> -->
