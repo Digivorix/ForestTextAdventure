@@ -45,6 +45,7 @@ class Main extends Sprite
 	
 	// Font format
 	var terminalFormat:TextFormat;
+	var inputFormat:TextFormat;
 	
 	// List text variables
 	var listTextField:TextField;
@@ -72,8 +73,18 @@ class Main extends Sprite
 		graphicSprite.scrollRect = new Rectangle(0, 0, 800, 192);
 		addChild(graphicSprite);
 		
-		// Set up primary text format
+		// Set up terminal text format
+		#if html5
+		terminalFormat = new TextFormat("Perfect DOS VGA 437", 16, 0xFFFFFF); // HTML5 weirdness
+		#end
+		#if cpp
 		terminalFormat = new TextFormat("Perfect DOS VGA 437", 20, 0xFFFFFF);
+		#end
+		#if (!html5 && !cpp)
+		terminalFormat = new TextFormat("Perfect DOS VGA 437", 18, 0xFFFFFF);
+		#end
+		// Set up input text format
+		inputFormat = new TextFormat("Perfect DOS VGA 437", 24, 0xFFFFFF);
 		
 		// Text list container sprite
 		listSprite = new Sprite();
@@ -108,7 +119,7 @@ class Main extends Sprite
 		inputSprite.y = 448;
 		
 		inputTextField = new TextField();
-		inputTextField.defaultTextFormat = terminalFormat;
+		inputTextField.defaultTextFormat = inputFormat;
 		inputTextField.selectable = false;
 		inputTextField.text = "";
 		inputTextField.width = 800;
@@ -128,6 +139,9 @@ class Main extends Sprite
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyUp);
 		
+		// Set up resizing
+		stage.addEventListener(Event.RESIZE, onResize);
+		
 		textList = [];
 		linesToPush = [];
 		
@@ -136,10 +150,10 @@ class Main extends Sprite
 		#end
 	}
 	
-	private function restart():Void{
-		trace("Restart game");
+	private function restart(pos:Int):Void{
+		//trace("Restart game");
 		pause = 0;
-		storyPos = 4; // Skip all the introductory stuff
+		storyPos = pos; // Start from specified story position
 		
 		linesToPush = [];
 		linesPushed = 0;
@@ -169,12 +183,22 @@ class Main extends Sprite
 			#if (!flash && !html5)
 			running = false;
 			#else
-			restart(); //For Flash and HTML5
+			restart(0); //For Flash and HTML5
 			#end
 		}
+		
+		// Force quit
+		if (checkKey(Keyboard.ESCAPE)){
+			#if (!flash && !html5)
+			running = false;
+			#else
+			restart(0); //For Flash and HTML5
+			#end
+		}
+		
 		// Restart from loss
 		if (checkKey(Keyboard.R) && gameLost && !userQuit){
-			restart();
+			restart(4);
 		}
 		
 		if (allowInput){
@@ -239,6 +263,25 @@ class Main extends Sprite
 					];
 					allowInput = true;
 					waitingForInput = true;
+				case 6:
+					resetPushedLines();
+					linesToPush = [
+					"",
+					"Later you find an apple and a banana, you are hungry.",
+					"Which one do you eat? (APPLE | BANANA)"
+					];
+					allowInput = true;
+					waitingForInput = true;
+				case 7:
+					resetPushedLines();
+					linesToPush = [
+					"",
+					"You come to a clearing and see a iron sword with a jeweled hilt.",
+					"You also see a pack of dynamite.",
+					"Which do you choose? (SWORD | DYNAMITE)"
+					];
+					allowInput = true;
+					waitingForInput = true;
 			}
 			cont = false;
 		}
@@ -250,7 +293,7 @@ class Main extends Sprite
 			else if(waitingForInput){
 				// Waiting
 			}
-			else if(!(linesPushed < linesToPush.length) && !waitingForInput && !userQuit && !gameLost){
+			else if(!(linesPushed < linesToPush.length) && !waitingForInput && !userQuit && !gameLost && !gameComplete){
 				// Resume if there are no lines waiting for a push, no pause for a user input, and the user has not quit the game
 				cont = true;
 			}
@@ -272,7 +315,7 @@ class Main extends Sprite
 	}
 	
 	private function progressStory(delay:Int = 0):Void{
-		trace("Progress story");
+		//trace("Progress story");
 		var newLine:String = linesToPush[linesPushed];
 		
 		if(newLine != null){
@@ -288,11 +331,10 @@ class Main extends Sprite
 		inputTextField.text = "";
 		
 		switch(storyPos){
-			case 2:
+			case 2: // Confirm start
 				if (input == "Y"){
 					resetPushedLines();
 					linesToPush = ["", "Great, I like games."];
-					//wait(2);
 					storyPos++;
 					waitingForInput = false;
 				}
@@ -301,11 +343,11 @@ class Main extends Sprite
 					trace("User has quit game");
 					#if (!flash && !html5)
 					// Native
-					linesToPush = ["", "Not now? Okay", "", "Goodbye"];
+					linesToPush = ["", "Not now? Okay", "", "Goodbye2"];
 					userQuit = true;
 					#else
 					// Flash and Web
-					linesToPush = ["", "Not now? Okay", "", "Goodbye", "", "Press R to Restart"];
+					linesToPush = ["", "Not now? Okay", "", "Goodbye3", "", "Press R to Restart"];
 					gameLost = true;
 					#end
 				}
@@ -314,16 +356,66 @@ class Main extends Sprite
 					linesToPush = ["", "<INVALID INPUT>"];
 					waitingForInput = false;
 				}
-			case 4:
+			case 4: // Fork in the road
 				if (input == "LEFT"){
 					resetPushedLines();
 					linesToPush = ["", "You chose wrong! You fell into a pit of spikes and died!", "Your score is 0", "", "Press R to Restart"];
-					//wait(2);
 					gameLost = true;
 				}
 				else if (input == "RIGHT"){
 					resetPushedLines();
 					linesToPush = ["", "You are right! You go along your merry way."];
+					storyPos++;
+					waitingForInput = false;
+				}
+				else{
+					resetPushedLines();
+					linesToPush = ["", "<INVALID INPUT>"];
+					waitingForInput = false;
+				}
+			case 5: // Lava
+				if (input == "BOAT"){
+					resetPushedLines();
+					linesToPush = ["", "The boat was rigged to explode! You blew up.", "Your score is 1", "", "Press R to Restart"];
+					gameLost = true;
+				}
+				else if (input == "SWIM"){
+					resetPushedLines();
+					linesToPush = ["", "You chose right! The lava was fake, it was a prank by your friend!", "It was actually water, you were able to swim across safely."];
+					storyPos++;
+					waitingForInput = false;
+				}
+				else{
+					resetPushedLines();
+					linesToPush = ["", "<INVALID INPUT>"];
+					waitingForInput = false;
+				}
+			case 6: // Apple or banana
+				if (input == "APPLE"){
+					resetPushedLines();
+					linesToPush = ["", "The apple was poisoned by a bandit who was hiding in the bushes!", "You are now dead and poor.", "Your score is 2", "", "Press R to Restart"];
+					gameLost = true;
+				}
+				else if (input == "BANANA"){
+					resetPushedLines();
+					linesToPush = ["", "You chose right! With your hunger satisfied, you move on."];
+					storyPos++;
+					waitingForInput = false;
+				}
+				else{
+					resetPushedLines();
+					linesToPush = ["", "<INVALID INPUT>"];
+					waitingForInput = false;
+				}
+			case 7: // Sword
+				if (input == "SWORD"){
+					resetPushedLines();
+					linesToPush = ["", "The sword was electrified!", "You are now nice and crispy, and also dead.", "Your score is 3", "", "Press R to Restart"];
+					gameLost = true;
+				}
+				else if (input == "DYNAMITE"){
+					resetPushedLines();
+					linesToPush = ["", "You chose right!", "You now have a pack of dynamite to use against a foe.", "You continue on your path."];
 					storyPos++;
 					waitingForInput = false;
 				}
@@ -420,6 +512,18 @@ class Main extends Sprite
 		}
 		
 		cacheTime = currentTime; // Update the cached time
+	}
+	
+	private function onResize(event:Event):Void {
+		#if (!flash && !html5)
+		var multX:Float = stage.stageWidth / 800; 
+		var multY:Float = stage.stageHeight / 480;
+		
+		this.scaleX = multX;
+		this.scaleY = multY;
+		
+		this.scrollRect = new Rectangle (0, 0, 800 * this.scaleX, 480 * this.scaleY);
+		#end
 	}
 	
 	private function onKeyDown(event:KeyboardEvent):Void {

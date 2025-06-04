@@ -17,7 +17,7 @@
 	<haxelib name="openfl" />
 	
 	<!-- assets -->
-	<icon path="assets/openfl.svg" />
+	<icon path="assets/openfl.png" />
 	<assets path="assets/images" rename="images" include="*.png|*.jpg|*.gif" />
 	<assets path="assets/fonts" rename="fonts" include="*.png|*.fnt|*.ttf" />
 	
