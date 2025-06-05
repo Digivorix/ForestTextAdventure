@@ -190,8 +190,8 @@ class Main extends Sprite
 			#end
 		}
 		
-		// Restart from loss
-		if (checkKey(Keyboard.R) && gameLost && !userQuit){
+		// Restart from loss or completion
+		if (checkKey(Keyboard.R) && (gameLost || gameComplete) && !userQuit){
 			restart(4);
 		}
 		
@@ -516,14 +516,15 @@ class Main extends Sprite
 			case 11: // Dragon
 				if (input == "NUKE"){
 					resetPushedLines();
-					linesToPush = ["", "You blew up the dragon, but also yourself, the castle, and the surrounding area!", "Good job hero.", "Your score is 7/8. You were so close!", "", "Press R to Restart"];
+					linesToPush = ["", "You blew up the dragon, but also yourself, the castle, and the surrounding area!", "Good job hero.", "Your score is 7/8. You were so close!", "", "Press R to Restart", "ESC to Quit"];
 					gameLost = true;
 				}
 				else if (input == "DYNAMITE"){
 					resetPushedLines();
-					linesToPush = ["", "You blew up the dragon and lived!", "You return to your town a hero and live you life to a nice old age.", "Your score is 8/8. YOU WIN!"];
+					linesToPush = ["", "You blew up the dragon and lived!", "You return to your town a hero and live you life to a nice old age.", "Your score is 8/8. YOU WIN!", "", "Press R to Restart", "ESC to Quit"];
 					storyPos++;
 					waitingForInput = false;
+					gameComplete = true;
 				}
 				else{
 					resetPushedLines();
@@ -573,7 +574,8 @@ class Main extends Sprite
 	
 	// Pause the next update loop execution for the specified time (in seconds)
 	private function wait(length:Float):Void{
-		pause = length * 1000;
+		//pause = length * 1000;
+		pause = 0.25 * 1000;
 	}
 	
 	// Final actions before application ends
