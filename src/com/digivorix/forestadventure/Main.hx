@@ -322,6 +322,7 @@ class Main extends Sprite
 					//allowInput = true;
 					waitingForInput = true;
 				case 10:
+					storyGraphic.bitmapData = Assets.getBitmapData("images/story8.png");
 					resetPushedLines();
 					linesToPush = [
 					"",
@@ -331,6 +332,7 @@ class Main extends Sprite
 					//allowInput = true;
 					waitingForInput = true;
 				case 11:
+					storyGraphic.bitmapData = Assets.getBitmapData("images/story9.png");
 					resetPushedLines();
 					linesToPush = [
 					"",
@@ -548,12 +550,13 @@ class Main extends Sprite
 				}
 			case 11: // Dragon
 				if (input == "NUKE"){
-					
+					storyGraphic.bitmapData = Assets.getBitmapData("images/gameover.png");
 					resetPushedLines();
 					linesToPush = ["", "You blew up the dragon, but also yourself, the castle, and the surrounding area!", "Good job hero.", "Your score is 7/8. You were so close!", "", "Press R to Restart", "ESC to Quit"];
 					gameLost = true;
 				}
 				else if (input == "DYNAMITE"){
+					storyGraphic.bitmapData = Assets.getBitmapData("images/win.png");
 					resetPushedLines();
 					linesToPush = ["", "You blew up the dragon and lived!", "You return to your town a hero and live you life to a nice old age.", "Your score is 8/8. YOU WIN!", "", "Press R to Restart", "ESC to Quit"];
 					storyPos++;
