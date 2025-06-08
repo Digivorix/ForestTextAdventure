@@ -1,5 +1,7 @@
 package com.digivorix.forestadventure;
 
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
 import openfl.display.Sprite;
 import openfl.Lib;
 import openfl.text.Font;
@@ -11,6 +13,7 @@ import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import openfl.geom.Rectangle;
 import openfl.display.StageScaleMode;
+import openfl.Assets;
 
 /**
  * ...
@@ -43,6 +46,10 @@ class Main extends Sprite
 	var listSprite:Sprite; // Contains the text list (aka the terminal readout)
 	var inputSprite:Sprite; // Contains the input text box
 	
+	// Variables for story graphic bitmap
+	var storyGraphicData:BitmapData;
+	var storyGraphic:Bitmap;
+	
 	// Font format
 	var terminalFormat:TextFormat;
 	var inputFormat:TextFormat;
@@ -71,6 +78,10 @@ class Main extends Sprite
 		graphicSprite.graphics.endFill();
 		graphicSprite.y = 0;
 		graphicSprite.scrollRect = new Rectangle(0, 0, 800, 192);
+		storyGraphic = new Bitmap(Assets.getBitmapData("images/story1.png"));
+		storyGraphic.scaleX = storyGraphic.scaleY = 2.0;
+		
+		graphicSprite.addChild(storyGraphic);
 		addChild(graphicSprite);
 		
 		// Set up terminal text format
@@ -166,6 +177,11 @@ class Main extends Sprite
 		textList = [];
 		
 		inputTextField.text = "";
+		
+		//if (storyPos < 4)
+		//	storyGraphic.bitmapData = Assets.getBitmapData("images/story1.png");
+		//if	(storyPos == 4)
+		//	storyGraphic.bitmapData = Assets.getBitmapData("images/story4.png");
 	}
 	
 	//
@@ -242,6 +258,7 @@ class Main extends Sprite
 					];
 					storyPos++;
 				case 4:
+					storyGraphic.bitmapData = Assets.getBitmapData("images/story2.png");
 					resetPushedLines();
 					linesToPush = [
 					"",
@@ -251,6 +268,7 @@ class Main extends Sprite
 					//allowInput = true;
 					waitingForInput = true;
 				case 5:
+					storyGraphic.bitmapData = Assets.getBitmapData("images/story3.png");
 					resetPushedLines();
 					linesToPush = [
 					"",
@@ -260,6 +278,7 @@ class Main extends Sprite
 					//allowInput = true;
 					waitingForInput = true;
 				case 6:
+					storyGraphic.bitmapData = Assets.getBitmapData("images/story4.png");
 					resetPushedLines();
 					linesToPush = [
 					"",
@@ -269,6 +288,7 @@ class Main extends Sprite
 					//allowInput = true;
 					waitingForInput = true;
 				case 7:
+					storyGraphic.bitmapData = Assets.getBitmapData("images/story5.png");
 					resetPushedLines();
 					linesToPush = [
 					"",
@@ -331,6 +351,8 @@ class Main extends Sprite
 			}
 			else if(!(linesPushed < linesToPush.length) && !waitingForInput && !userQuit && !gameLost && !gameComplete){
 				// Resume if there are no lines waiting for a push, no pause for a user input, and the game has not ended in any way
+				
+				// Allow new story lines
 				cont = true;
 			}
 		}
@@ -396,6 +418,7 @@ class Main extends Sprite
 				}
 			case 4: // Fork in the road
 				if (input == "LEFT"){
+					storyGraphic.bitmapData = Assets.getBitmapData("images/gameover.png");
 					resetPushedLines();
 					linesToPush = ["", "You chose wrong! You fell into a pit of spikes and died!", "Your score is 0", "", "Press R to Restart"];
 					gameLost = true;
@@ -413,6 +436,7 @@ class Main extends Sprite
 				}
 			case 5: // Lava
 				if (input == "BOAT"){
+					storyGraphic.bitmapData = Assets.getBitmapData("images/gameover.png");
 					resetPushedLines();
 					linesToPush = ["", "The boat was rigged to explode! You blew up.", "Your score is 1", "", "Press R to Restart"];
 					gameLost = true;
@@ -430,6 +454,7 @@ class Main extends Sprite
 				}
 			case 6: // Apple or banana
 				if (input == "APPLE"){
+					storyGraphic.bitmapData = Assets.getBitmapData("images/gameover.png");
 					resetPushedLines();
 					linesToPush = ["", "The apple was poisoned by a bandit who was hiding in the bushes!", "You are now dead and poor.", "Your score is 2", "", "Press R to Restart"];
 					gameLost = true;
@@ -447,6 +472,7 @@ class Main extends Sprite
 				}
 			case 7: // Sword
 				if (input == "SWORD"){
+					storyGraphic.bitmapData = Assets.getBitmapData("images/gameover.png");
 					resetPushedLines();
 					linesToPush = ["", "The sword was electrified!", "You are now nice and crispy, and also dead.", "Your score is 3", "", "Press R to Restart"];
 					gameLost = true;
@@ -464,6 +490,7 @@ class Main extends Sprite
 				}
 			case 8: // Fence
 				if (input == "DYNAMITE"){
+					storyGraphic.bitmapData = Assets.getBitmapData("images/gameover.png");
 					resetPushedLines();
 					linesToPush = ["", "You don't know how to use dynamite properly yet!", "You blew yourself up!", "Your score is 4", "", "Press R to Restart"];
 					gameLost = true;
@@ -481,6 +508,7 @@ class Main extends Sprite
 				}
 			case 9: // Strange device and book
 				if (input == "DEVICE"){
+					storyGraphic.bitmapData = Assets.getBitmapData("images/gameover.png");
 					resetPushedLines();
 					linesToPush = ["", "The device was a black hole generator and you turned it on!", "Well, there goes the Earth, see ya!", "Your score is 5", "", "Press R to Restart"];
 					gameLost = true;
@@ -498,6 +526,7 @@ class Main extends Sprite
 				}
 			case 10: // Nuke and brick
 				if (input == "BRICK"){
+					storyGraphic.bitmapData = Assets.getBitmapData("images/gameover.png");
 					resetPushedLines();
 					linesToPush = ["", "The brick was part of a crucial support system!", "You're now buried under a pile of rubble! You're also dead.", "Your score is 6", "", "Press R to Restart"];
 					gameLost = true;
@@ -515,6 +544,7 @@ class Main extends Sprite
 				}
 			case 11: // Dragon
 				if (input == "NUKE"){
+					
 					resetPushedLines();
 					linesToPush = ["", "You blew up the dragon, but also yourself, the castle, and the surrounding area!", "Good job hero.", "Your score is 7/8. You were so close!", "", "Press R to Restart", "ESC to Quit"];
 					gameLost = true;
