@@ -182,6 +182,8 @@ class Main extends Sprite
 		//	storyGraphic.bitmapData = Assets.getBitmapData("images/story1.png");
 		//if	(storyPos == 4)
 		//	storyGraphic.bitmapData = Assets.getBitmapData("images/story4.png");
+		
+		storyGraphic.bitmapData = Assets.getBitmapData("images/story1.png");
 	}
 	
 	//
@@ -299,6 +301,7 @@ class Main extends Sprite
 					//allowInput = true;
 					waitingForInput = true;
 				case 8:
+					storyGraphic.bitmapData = Assets.getBitmapData("images/story6.png");
 					resetPushedLines();
 					linesToPush = [
 					"",
@@ -309,6 +312,7 @@ class Main extends Sprite
 					//allowInput = true;
 					waitingForInput = true;
 				case 9:
+					storyGraphic.bitmapData = Assets.getBitmapData("images/story7.png");
 					resetPushedLines();
 					linesToPush = [
 					"",
