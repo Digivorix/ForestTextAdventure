@@ -8,5 +8,8 @@ The game can be built using Haxe 3.2.1, OpenFL 3.6.0, and Lime 2.9.0
 # Precompiled Binaries
 Precompiled binaries are available from the **Releases** section.
 
+# Web Build
+A playable web build is available at https://davisdigitalgames.com/ForestTextAdventure/
+
 # Project Files
 The included project files are for FlashDevelop/HaxeDevelop version 5.3.3.
